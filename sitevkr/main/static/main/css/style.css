@@ -1,0 +1,425 @@
+
+/* Основное */
+.header {
+background: #c1f0e2;
+width: 100%;
+height: 76px; /*95 */
+z-index: 1041;
+position: fixed;
+right: 0;
+left: 0;
+top: 0;
+padding: 10px;
+/*box-shadow: 0 3px 6px 0 rgba(50,50,50,.15);*/
+box-sizing: border-box;
+}
+
+.footer {
+    position: fixed;
+    /*left: 0;*/
+    right: 0;
+    z-index: 10000;
+    bottom: 0;
+    background: hsla(0, 0%, 100%, .1);
+    padding: 12px 24px;
+    font: inherit;
+    font-size:14px;
+
+}
+
+
+.logo{
+	height:55px; /*55 */
+	margin: 1px; /*2 */
+	position: static;
+}
+
+
+.main {
+margin-top: 76px;
+overflow: hidden;
+/*background: #fff;*/
+}
+
+
+
+body{
+font-size: 15px;
+line-height: 20px;
+letter-spacing: .3px;
+direction: ltr;
+font-variant-numeric: lining-nums;
+font-feature-settings: "lnum" 1;
+background: #f2fbfb;
+color: #161616;
+}
+
+
+/* Кнопка для загрузки файла  */
+
+.input__wrapper {
+  width: 100%;
+  position: relative;
+  margin: 150px 0 0;
+  text-align: center;
+}
+
+.input__file {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.input__file-icon-wrapper {
+  height: 60px;
+  width: 60px;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #fff;
+
+}
+
+.input__file-button-text {
+  line-height: 1;
+  margin-top: 1px;
+
+
+
+}
+
+.input__file-button {
+  width: 100%;
+  max-width: 489px;
+  height: 90px;
+  background: #1bbc9b;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 3px;
+  cursor: pointer;
+  margin: 0 auto;
+  transition: 0.2s;
+
+}
+.input__file-button:hover { background: rgb(232,95,76); } /* при наведении курсора мышки */
+.input__file-button:active { background: rgb(152,15,0); } /* при нажатии */
+
+.knopka {
+  display: inline-block;
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  user-select: none;
+  padding: .5em 2em;
+  outline: none;
+  border: 0px solid;
+  border-radius: 1px;
+  transition: 0.2s;
+  margin-top:15px;
+  width: 489px;
+  height: 45px;
+  background: #1bbc9b;
+  font-size: 1.105rem;
+  border-radius: 3px;
+
+}
+.knopka:hover { background: rgb(232,95,76); } /* при наведении курсора мышки */
+.knopka:active { background: rgb(152,15,0); } /* при нажатии */
+
+/* Разделяющая линия в радиобаттон */
+.hr_calc{
+   width:295px;
+   text-align:left;
+   margin-left:0;
+   border: none; /* Убираем границу для браузера Firefox */
+   height: 1px;
+   color: rgb(255, 150, 126); /* Цвет линии для остальных браузеров */
+   background-color: rgb(255, 150, 126); /* Цвет линии для браузера Firefox и Opera */
+
+}
+
+/* Длина input number */
+.num{
+    width: 50px;
+
+}
+
+/* Радио с чекбоксы*/
+
+input[type="checkbox"]:checked,
+input[type="checkbox"]:not(:checked),
+input[type="radio"]:checked,
+input[type="radio"]:not(:checked)
+{
+    position: absolute;
+    left: -9999px;
+}
+
+
+input[type="checkbox"]:checked + label,
+input[type="checkbox"]:not(:checked) + label,
+input[type="radio"]:checked + label,
+input[type="radio"]:not(:checked) + label {
+    display: inline-block;
+    position: relative;
+    padding-left: 28px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked + label:before,
+input[type="checkbox"]:not(:checked) + label:before,
+input[type="radio"]:checked + label:before,
+input[type="radio"]:not(:checked) + label:before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+input[type="checkbox"]:checked + label:before,
+input[type="checkbox"]:not(:checked) + label:before {
+    border-radius: 2px;
+}
+
+input[type="radio"]:checked + label:before,
+input[type="radio"]:not(:checked) + label:before {
+    border-radius: 100%;
+}
+
+input[type="checkbox"]:checked + label:after,
+input[type="checkbox"]:not(:checked) + label:after,
+input[type="radio"]:checked + label:after,
+input[type="radio"]:not(:checked) + label:after {
+    content: "";
+    position: absolute;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked + label:after,
+input[type="checkbox"]:not(:checked) + label:after {
+    left: 3px;
+    top: 4px;
+    width: 10px;
+    height: 5px;
+    border-radius: 1px;
+    border-left: 4px solid rgb(232,95,76);
+    border-bottom: 4px solid rgb(232,95,76);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+input[type="radio"]:checked + label:after,
+input[type="radio"]:not(:checked) + label:after {
+    left: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: rgb(232,95,76);
+}
+
+input[type="checkbox"]:not(:checked) + label:after,
+input[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+}
+
+input[type="checkbox"]:not(:checked) + label,
+input[type="radio"]:not(:checked) + label {
+    color: #666;
+}
+
+
+input[type="checkbox"]:checked + label:after,
+input[type="radio"]:checked + label:after {
+    opacity: 1;
+}
+
+/* кнопка для расчета */
+.calcbtn {
+    background-color: #1bbc9b;
+    color: white;
+    padding: 9px;
+    font-size: 15px;
+    border: none;
+    border-radius: 3px;
+    margin: 0px;
+    margin-top: 5px;
+    transition: all 0.15s ease;
+
+}
+.calcbtn:hover { background: rgb(232,95,76); } /* при наведении курсора мышки */
+.calcbtn:active { background: rgb(152,15,0); } /* при нажатии */
+
+/* Ращделение экрана на 3 зоны, тип расчета, график и таблица  */
+.split_left
+{
+   float:left;
+   width: 25%;
+   display: block;
+
+
+}
+.split_left_center
+{
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+
+.split_right
+{
+   float:left;
+   width: 75%;
+   display: block;
+}
+
+.split_right_center
+{
+  text-align:center;
+  padding-top: 10px;
+}
+
+.div_down
+{
+   clear:both;
+}
+
+.div_down_center
+{
+  text-align:center;
+}
+
+
+
+/* Гистограмма */
+
+#container {
+  height: 420px;
+}
+
+.highcharts-figure, .highcharts-data-table table {
+  min-width: 310px;
+  max-width: 950px;
+  margin: 1em auto;
+}
+
+.highcharts-data-table table {
+  font-family: Verdana, sans-serif;
+  border-collapse: collapse;
+  border: 1px solid #EBEBEB;
+  margin: 10px auto;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+.highcharts-data-table caption {
+  padding: 1em 0;
+  font-size: 1.2em;
+  color: #555;
+}
+.highcharts-data-table th {
+	font-weight: 600;
+  padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+  padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+  background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+  background: #f1f7ff;
+}
+
+
+.split_left_menu
+{
+   float:left;
+   width: 89%;
+   display: block;
+
+
+}
+
+/* Разделение header на 2 части */
+.split_right_menu
+{
+   float:left;
+   width: 11%;
+   display: block;
+   text-align:center;
+   padding-top:8px;
+
+
+}
+
+/* выпадающее меню  */
+
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #1bbc9b;
+    color: white;
+    padding: 9px;
+    font-size: 15px;
+    border: none;
+    border-radius: 3px;
+    transition: all 0.15s ease;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f2fbfb;
+    min-width: 160px;
+    border-radius: 3px;
+    padding: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    left:-40px;
+    transition: all 0.15s ease;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-radius: 3px;
+    cursor: pointer
+    transition: all 0.15s ease;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: rgb(232,95,76);transition: all 0.15s ease;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block; }
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: rgb(232,95,76);}
+

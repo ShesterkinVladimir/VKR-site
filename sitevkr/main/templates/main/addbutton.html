@@ -1,0 +1,25 @@
+{% extends "main/base.html" %}
+{% load static %}
+    {% block title %}Загрузка файла{% endblock %}
+
+    {% block page %}
+	 <form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+    	<div class="input__wrapper">
+	   		<input name="file" type="file"  id="input__file" class="input input__file">
+	   		<label for="input__file" class="input__file-button">
+	     	<span class="input__file-icon-wrapper"><img class="input__file-icon" src="{% static 'main/img/add.svg' %}"
+														alt="Выбрать файл" width="25"></span>
+	    	<span class="input__file-button-text">{{ button_label }}</span>
+
+	   		</label>
+<!--			{{form.file}}-->
+			<input name="file" type="submit" value="Загрузить файл" class="knopka">
+		</div>
+	 </form>
+    {% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{% static '/main/js/addbutton.js' %}" ></script>
+{% endblock %}
+

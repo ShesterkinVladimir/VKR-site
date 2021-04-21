@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="{% static 'main/css/style.css' %}">
+
+	{% block link %}
+
+	{% endblock %}
+</head>
+<body>
+	 <div class="header">
+			<div class="split_left_menu">
+        	<a href="{% url 'upload_file' %}" title="MPEIlogo">
+            <img class="logo" src="{% static 'main/img/logo.jpg.png' %}" alt="MPEIlogo">
+        	</a>
+			</div>
+		 <div class="split_right_menu">
+		{% block header %}
+
+		{% endblock %}
+		 </div>
+	 </div>
+
+	 <div class="main">
+		 {% block page %}
+
+		 {% endblock %}
+	 </div>
+
+
+
+
+	 <div class="footer">
+		 {% block footer %}
+    	<div class="footer__copy"> ВКР - Шестёркин Владимир 2021  
+    	 </div>
+		 {% endblock %}
+	</div>
+	
+{% block script %}
+
+{% endblock %}
+</body>
+
+
+</html>

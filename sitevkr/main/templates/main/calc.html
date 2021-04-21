@@ -1,0 +1,258 @@
+{% extends "main/base.html" %}
+{% load static %}
+    {% block title %}Расчёт по CSV файлу{% endblock %}
+
+     {% block header %}
+<!--    <input type="submit" name="submit" value="Рассчитать" id="buttonCsv">-->
+<div class="dropdown">
+  <button class="dropbtn">Экспорт CSV</button>
+  <div class="dropdown-content">
+<!--    <input type="submit" name="submit" value="В том же файле" class="downCSV">-->
+<!--    <input type="submit" name="submit" value="В новом файле" class="downCSV">-->
+      <a href="/download_csv/?name_file={{ name_file }}&nmon={{ nmon}}&day={{ nday}}
+      &nmon1={{ nmon1}}&nday1={{ nday1}}&nmon2={{ nmon2}}&nday2={{ nday2}}" >Link 1</a>
+    <a onclick="downlaodCsv()" >Link 2</a>
+<!--      target="_blank"-->
+
+  </div>
+</div>
+		{% endblock %}
+
+    {% block page %}
+    <form  method="post">
+        {% csrf_token %}
+        <div class="split_left">
+            <div class="split_left_center">
+
+        <p><input name="type_date"  type="radio" value="day" id="radio_day" >
+            <label for="radio_day" >Расчёт дня </label></p>
+
+            <select name="select_day" size="1" id="select_day" class="select">
+                <option value="sd1"> Расчёт дня по часам</option>
+            </select>
+
+            <div id="date_day_div">
+            <p></p>
+            Номер месяца: <input type="number" name="nmon_day" id="nmon_day" value="1" min="1" max="12" class="num">
+            Номер дня: <input type="number" name="nday_day" id="nday_day" value="1" min="1" max="31" class="num">
+            </div>
+            <div id="check_graph_day_div">
+            <p ><input type="checkbox" name="check_graph_day" value="graph" id="check_graph_day" checked>
+                <label for="check_graph_day"> Построить график </label></p>
+            </div>
+        <hr class="hr_calc">
+
+        <p><input name="type_date" type="radio" value="month" id="radio_month" >
+            <label for="radio_month"> Расчёт месяца</label></p>
+            <select name="select_month" size="1" id="select_month" class="select">
+                <option value="sm1"> Расчёт месяца по часам</option>
+                <option value="sm2"> Расчёт месяца по дням</option>
+            </select>
+            <div id="date_month_div">
+            <p> Номер месяца: <input type="number" name="nmon_mon" id="nmon_mon" value="1" min="1" max="12" class="num"></p>
+            </div>
+            <div id="check_graph_month_div">
+            <p ><input type="checkbox" name="check_graph_month" value="graph" id="check_graph_month" checked>
+                <label for="check_graph_month"> Построить график</label></p>
+            </div>
+        <hr class="hr_calc">
+
+        <p><input name="type_date" type="radio" value="year" id="radio_year" >
+            <label for="radio_year"> Расчёт года </label></p>
+            <select name="select_year" size="1" id="select_year" class="select">
+                <option value="sy1"> Расчёт года по часам </option>
+                <option value="sy2"> Расчёт года по дням </option>
+                <option value="sy3"> Расчёт года по месяцам </option>
+            </select>
+            <div id="check_graph_year_div">
+            <p><input type="checkbox" name="check_graph_year" value="graph" id="check_graph_year" checked>
+                <label for="check_graph_year"> Построить график </label></p>
+            </div>
+        <hr class="hr_calc">
+
+        <p><input name="type_date" type="radio" value="custom" id="radio_custom">
+            <label for="radio_custom"> Расчёт по произвольному интервалу </label></p>
+            <select name="select_custom" size="1" id="select_custom" class="select">
+                <option value="sc1"> Расчёт по замкнутому интервалу </option>
+            </select>
+            <div id="date_custom_div">
+            <p> Начальная дата расчётов: </p>
+            Номер месяца: <input type="number" name="nmon_cus1" id="nmon_cus1" value="1" min="1" max="12" class="num">
+            Номер дня: <input type="number" name="nday_cus1" id="nday_cus1" value="1" min="1" max="31" class="num" >
+            <p>Конечная дата расчётов: </p>
+            Номер месяца: <input type="number" name="nmon_cus2" id="nmon_cus2" value="12" min="1" max="12" class="num">
+            Номер дня: <input type="number" name="nday_cus2" id="nday_cus2" value="31" min="1" max="31" class="num">
+            </div>
+        <hr class="hr_calc">
+
+        <p>Широта: <input type="number" name="latitude" value="0" min="0" max="90" class="num"></p>
+        <p>Азимут: <input type="number" name="azimuth" value="0" min="0" max="360"  class="num"></p>
+        <p>Угол наклона: <input type="number" name="tilt_angle" value="0" min="0" max="90" class="num"></p>
+        <p><input type="checkbox" name="check_max_titl" value="max_titl" id="check_max_titl">
+            <label for="check_max_titl">Поиск максимального угла наклона</label> </p>
+        <p><input type="submit" name="submit" value="Рассчитать" class="calcbtn"></p>
+
+
+        </div>
+        </div>
+
+
+    </form>
+
+    <div class="split_right">
+        <div class="split_right_center">
+<!--            <button onclick="downlaodCsv()">-->
+<!--            Export to csv-->
+<!--            </button>-->
+
+            {% if graph %}
+            <figure class="highcharts-figure" >
+              <div id="container"></div>
+            </figure>
+            {% endif %}
+            {% if not graph %}
+<!--            <img class="graph" src="/media/graph/testplot.png" alt="graph" width="900" >-->
+             {% endif %}
+        </div>
+    </div>
+
+{% if graph %}
+    <div class="div_down">
+        <div class="div_down_center">
+
+<!--    <img class="graph" src="/media/graph/testplot.png" alt="graph" width="900" >-->
+
+        </div>
+    </div>
+{% endif %}
+
+    {% endblock %}
+
+
+{% block script %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    $("#select_day").hide();
+    $("#select_month").hide();
+    $("#select_year").hide();
+    $("#select_custom").hide();
+    $("#check_graph_day_div").hide();
+    $("#check_graph_month_div").hide();
+    $("#check_graph_year_div").hide();
+    $("#date_day_div").hide();
+    $("#date_month_div").hide();
+    $("#date_custom_div").hide();
+
+</script>
+
+{% if graph %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<!--<script type="text/javascript" src="{% static '/main/js/histogram.js' %}" ></script>-->
+<script>
+
+var chart = Highcharts.chart('container', {
+  chart: {
+    backgroundColor: '#f2fbfb',
+    type: 'column'
+  },
+  title: {
+    text: '{{ title }}',
+
+  },
+
+  xAxis: {
+    type: 'category',
+    labels: {
+      rotation: 0,
+      style: {
+        fontSize: '13px',
+        fontFamily: 'Verdana, sans-serif'
+      }
+    },
+    title: {
+      text: '{{xAxis}}',
+      style: {
+        fontSize: '13px',
+        fontFamily: 'Verdana, sans-serif'
+      }
+    }
+  },
+  yAxis: {
+    min: 0,
+    title: {
+      text: 'Энергия (кВт·ч/кв.м)',
+      style: {
+        fontSize: '13px',
+        fontFamily: 'Verdana, sans-serif'
+      }
+    }
+  },
+  legend: {
+    enabled: false
+  },
+  tooltip: {
+  pointFormat: 'Энергии за {{xAxis}}: <b>{point.y:.5f} </b>'
+  },
+  series: [{
+    name: 'Энергия (кВт·ч/кв.м)',
+    data: {{ data }},
+    dataLabels: {
+      enabled: true,
+      rotation: -90,
+      color: '#FFFFFF',
+      align: 'right',
+      format: '{point.y:.2f}', // one decimal
+      y: 10, // 10 pixels down from the top
+      style: {
+        fontSize: '13px',
+        fontFamily: 'Verdana, sans-serif'
+      }
+    }
+  }],
+  exporting: {
+     //showTable: true
+    //    enabled: false
+
+       csv: {
+      itemDelimiter: ';'
+         },
+       filename: 'new_file',
+       buttons: {
+                contextButton: {
+                    symbolStroke: "#e85f4c", //#1bbc9b
+                    theme: {
+            fill:"#f2fbfb"
+        }
+                }
+            },
+    },
+    plotOptions: {
+    series: {
+        pointPadding: 0, // Defaults to 0.1
+        groupPadding: 0, // Defaults to 0.2
+        borderWidth: 1,
+        color: '#e87464',
+    }
+},
+
+});
+
+
+function downlaodCsv() {
+ chart.downloadCSV()
+}
+
+
+</script>
+
+{% endif %}
+
+<script type="text/javascript" src="{% static '/main/js/typedate.js' %}" ></script>
+
+
+{% endblock %}
