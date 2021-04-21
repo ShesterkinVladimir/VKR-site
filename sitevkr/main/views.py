@@ -143,4 +143,5 @@ def download_csv(request):
 
 
 def select_columns(request, name_file):
+    print("1")
     return render(request, 'main/select_columns.html')
