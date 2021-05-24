@@ -7,19 +7,15 @@
 <div class="dropdown">
   <button class="dropbtn">Экспорт CSV</button>
   <div class="dropdown-content">
-<!--    <input type="submit" name="submit" value="В том же файле" class="downCSV">-->
-<!--    <input type="submit" name="submit" value="В новом файле" class="downCSV">-->
-      <a href="/download_csv/?name_file={{ name_file }}&nmon={{ nmon}}&day={{ nday}}
-      &nmon1={{ nmon1}}&nday1={{ nday1}}&nmon2={{ nmon2}}&nday2={{ nday2}}" >Link 1</a>
-    <a onclick="downlaodCsv()" >Link 2</a>
-<!--      target="_blank"-->
+      <a href="/download_csv/?name_file={{name_file}}&nmon={{nmon}}&nday={{nday}}&
+       &nmon1={{nmon1}}&nday1={{nday1}}&nmon2={{nmon2}}&nday2={{nday2}}&results={{results}}" >Стандартный CSV</a>
 
   </div>
 </div>
 		{% endblock %}
 
     {% block page %}
-    <form  method="post">
+    <form  method="POST">
         {% csrf_token %}
         <div class="split_left">
             <div class="split_left_center">
@@ -85,9 +81,9 @@
             </div>
         <hr class="hr_calc">
 
-        <p>Широта: <input type="number" name="latitude" value="0" min="0" max="90" class="num"></p>
-        <p>Азимут: <input type="number" name="azimuth" value="0" min="0" max="360"  class="num"></p>
-        <p>Угол наклона: <input type="number" name="tilt_angle" value="0" min="0" max="90" class="num"></p>
+        <p>Широта: <input type="number" name="latitude" value={{latitude|default:0}} min="0" max="90" class="num"></p>
+        <p>Азимут: <input type="number" name="azimuth" value={{azimuth|default:0}} min="0" max="360"  class="num"></p>
+        <p>Угол наклона: <input type="number" name="tilt_angle" value={{tilt_angle|default:0}} min="0" max="90" class="num"></p>
         <p><input type="checkbox" name="check_max_titl" value="max_titl" id="check_max_titl">
             <label for="check_max_titl">Поиск максимального угла наклона</label> </p>
         <p><input type="submit" name="submit" value="Рассчитать" class="calcbtn"></p>
@@ -101,9 +97,15 @@
 
     <div class="split_right">
         <div class="split_right_center">
-<!--            <button onclick="downlaodCsv()">-->
-<!--            Export to csv-->
-<!--            </button>-->
+            {% if max_titl %}
+                {% if max_titl.0 == tilt_angle %}
+                <p style="font-family: Verdana, sans-serif;">Рассчитано при оптимальном угле: {{max_titl.0}}</p>
+                {% elif max_titl.0 != tilt_angle %}
+                <p style="font-family: Verdana, sans-serif;">Рассчитано при угле: {{tilt_angle}}
+                    &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Оптимальный угол: {{max_titl.0}}</p>
+
+                {% endif %}
+            {% endif %}
 
             {% if graph %}
             <figure class="highcharts-figure" >
@@ -162,7 +164,6 @@ var chart = Highcharts.chart('container', {
   },
   title: {
     text: '{{ title }}',
-
   },
 
   xAxis: {
