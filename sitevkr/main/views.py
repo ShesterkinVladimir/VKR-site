@@ -10,10 +10,6 @@ import os
 
 
 def upload_file(request, status_file=""):  # загрузка файла по нажатию кнопки
-    if status_file != "":
-        context = {"button_label": "Упс, с вашим CSV файлом что-то не так"}
-        return render(request, 'main/addbutton.html', context)
-    form = Upload_Form()
     if request.method == 'POST':
         form = Upload_Form(request.POST, request.FILES)
         if form.is_valid():
@@ -27,6 +23,9 @@ def upload_file(request, status_file=""):  # загрузка файла по н
             newfile.save()
             return redirect('calc/'+str(newfile.file))
             # return redirect('select_columns/'+str(newfile.file))
+    if status_file != "":
+        context = {"button_label": "Упс, с вашим CSV файлом что-то не так"}
+        return render(request, 'main/addbutton.html', context)
     context = {"button_label": "Выберете CSV файл"}
     return render(request, 'main/addbutton.html', context)
 
@@ -115,7 +114,7 @@ def calc(request, name_file):
             # content.update({"form": form})
         content.update({"name_file":  name_file})
         return render(request, 'main/calc.html', content)
-    except TypeError:
+    except (TypeError, AttributeError):
         return redirect(reverse('file_false', kwargs={'status_file': name_file+'_false'}))
 
 
