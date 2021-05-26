@@ -8,7 +8,8 @@
   <button class="dropbtn">Экспорт CSV</button>
   <div class="dropdown-content">
       <a href="/download_csv/?name_file={{name_file}}&nmon={{nmon}}&nday={{nday}}&
-       &nmon1={{nmon1}}&nday1={{nday1}}&nmon2={{nmon2}}&nday2={{nday2}}&results={{results}}" >Стандартный CSV</a>
+       &nmon1={{nmon1}}&nday1={{nday1}}&nmon2={{nmon2}}&nday2={{nday2}}" >Стандартный CSV</a>
+
 
   </div>
 </div>
@@ -111,29 +112,37 @@
             <figure class="highcharts-figure" >
               <div id="container"></div>
             </figure>
+
+             {% else %}
+            <div class="split_right_center_table">
+            <table id="withoutgraph" class="display" width="100%"></table>
+                </div>
             {% endif %}
-            {% if not graph %}
-<!--            <img class="graph" src="/media/graph/testplot.png" alt="graph" width="900" >-->
-             {% endif %}
-        </div>
-    </div>
-
-{% if graph %}
-    <div class="div_down">
-        <div class="div_down_center">
-
-<!--    <img class="graph" src="/media/graph/testplot.png" alt="graph" width="900" >-->
 
         </div>
     </div>
-{% endif %}
+        {% if graph %}
+
+            <div class="div_down">
+                <div class="div_down_center">
+
+             <table id="withgraph" class="display" width="100%"></table>
+
+
+                </div>
+            </div>
+        {% endif %}
+
 
     {% endblock %}
 
+{% block footer %}
 
+		 {% endblock %}
 {% block script %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
 <script>
     $("#select_day").hide();
@@ -149,12 +158,14 @@
 
 </script>
 
-{% if graph %}
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-<!--<script type="text/javascript" src="{% static '/main/js/histogram.js' %}" ></script>-->
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+
 <script>
 
 var chart = Highcharts.chart('container', {
@@ -243,15 +254,70 @@ var chart = Highcharts.chart('container', {
 
 });
 
+</script>
+
+<script>
+var dataSet = {{table}};
+
+$(document).ready(function() {
+    $('#withgraph').DataTable( {
+        bFilter: false,
+        data: dataSet,
+        {% if columns == 4 %}
+        columns: [
+            { title: "Месяц"},
+            { title: "День"},
+            { title: "Час"},
+            { title: "Энергия "},
+        ]
+        {% elif columns == 3 %}
+        columns: [
+            { title: "Месяц"},
+            { title: "День"},
+            { title: "Энергия "},
+        ]
+        {% else %}
+        columns: [
+            { title: "Месяц"},
+            { title: "Энергия "},
+        ]
+        {% endif %}
+
+    } );
+} );
+
+$(document).ready(function() {
+    $('#withoutgraph').DataTable( {
+        bFilter: false,
+        data: dataSet,
+
+        {% if columns == 4 %}
+        columns: [
+            { title: "Месяц"},
+            { title: "День"},
+            { title: "Час"},
+            { title: "Энергия "},
+        ]
+        {% elif columns == 3 %}
+        columns: [
+            { title: "Месяц"},
+            { title: "День"},
+            { title: "Энергия "},
+        ]
+        {% else %}
+        columns: [
+            { title: "Месяц"},
+            { title: "Энергия "},
+        ]
+        {% endif %}
+    } );
+} );
 
 function downlaodCsv() {
  chart.downloadCSV()
 }
 
-
 </script>
-
-{% endif %}
 
 <script type="text/javascript" src="{% static '/main/js/typedate.js' %}" ></script>
 

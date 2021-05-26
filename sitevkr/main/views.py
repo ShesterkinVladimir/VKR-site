@@ -22,7 +22,6 @@ def upload_file(request, status_file=""):  # загрузка файла по н
                 return render(request, 'main/addbutton.html', context)
             newfile.save()
             return redirect('calc/'+str(newfile.file))
-            # return redirect('select_columns/'+str(newfile.file))
     if status_file != "":
         context = {"button_label": "Упс, с вашим CSV файлом что-то не так"}
         return render(request, 'main/addbutton.html', context)
@@ -34,7 +33,8 @@ def upload_file(request, status_file=""):  # загрузка файла по н
 def calc(request, name_file):
     try:
         data = pd.read_csv("media/csv/"+name_file, decimal=",", delimiter=';')
-        content = {'graph': False}
+        content = {'graph': False, "name_file": name_file}
+        result = []
         if request.method == 'POST':
             form = request.POST
             if 'type_date' in form:
@@ -49,10 +49,10 @@ def calc(request, name_file):
                     nday = int(form['nday_day'])
                     content.update({"nmon": nmon, "nday": nday})
                     if form['select_day'] == 'sd1':
-                        day_by_hours = utils.calc_day_by_hours(data, nmon, nday, latitude, tilt_angle, azimuth)
-                        content.update({"results": day_by_hours})
+                        content.update({"table": 'hour'})
+                        result = utils.calc_day_by_hours(data, nmon, nday, latitude, tilt_angle, azimuth)
                         if 'check_graph_day' in form:
-                            graph_data = [[i + 1, day_by_hours[i]] for i in range(len(day_by_hours))]
+                            graph_data = [[i + 1, result[i]] for i in range(len(result))]
                             content.update({'graph': True,
                                        'data': graph_data,
                                        'title': f'Полученная энергия на наклонной поверхности за {nday}-й день {nmon}-го месяца',
@@ -66,22 +66,22 @@ def calc(request, name_file):
                     nmon = int(form['nmon_mon'])
                     content.update({"nmon": nmon})
                     if form['select_month'] == 'sm1':
-                        month_by_hours = utils.calc_month_by_hours(data, nmon, latitude, tilt_angle, azimuth)
-                        content.update({"results": month_by_hours})
+                        content.update({"table": 'hour'})
+                        result = utils.calc_month_by_hours(data, nmon, latitude, tilt_angle, azimuth)
                         if 'check_max_titl' in form:
                             max_titl = utils.max_tilt_angle(utils.calc_month_by_hours, data, nmon,
                                                             latitude=latitude, azimuth=azimuth)
                             content.update({"name_file": name_file, "max_titl": max_titl})
 
                     elif form['select_month'] == 'sm2':
-                        month_by_day = utils.calc_month_by_day(data, nmon, latitude, tilt_angle, azimuth)
-                        content.update({"results": month_by_day})
+                        content.update({"table": 'day'})
+                        result = utils.calc_month_by_day(data, nmon, latitude, tilt_angle, azimuth)
                         if 'check_graph_month' in form:
-                            graph_data = [[i + 1, month_by_day[i]] for i in range(len(month_by_day))]
-                            content = {'graph': True,
+                            graph_data = [[i + 1, result[i]] for i in range(len(result))]
+                            content.update({'graph': True,
                                        'data': graph_data,
                                        'title': f'Полученная энергия на наклонной поверхности за {nmon}-й месяц',
-                                       'xAxis': "День"}
+                                       'xAxis': "День"})
                         if 'check_max_titl' in form:
                             max_titl = utils.max_tilt_angle(utils.calc_month_by_day, data, nmon,
                                                             latitude=latitude, azimuth=azimuth)
@@ -89,30 +89,30 @@ def calc(request, name_file):
 
                 elif form['type_date'] == 'year':
                     if form['select_year'] == 'sy1':
-                        year_by_hours = utils.calc_year_by_hours(data, latitude, tilt_angle, azimuth)
-                        content.update({"results": year_by_hours})
+                        content.update({"table": 'hour'})
+                        result = utils.calc_year_by_hours(data, latitude, tilt_angle, azimuth)
                         if 'check_max_titl' in form:
                             max_titl = utils.max_tilt_angle(utils.calc_year_by_hours, data,
                                                             latitude=latitude, azimuth=azimuth)
                             content.update({"name_file": name_file, "max_titl": max_titl})
 
                     elif form['select_year'] == 'sy2':
-                        year_by_day = utils.calc_year_by_day(data, latitude, tilt_angle, azimuth)
-                        content.update({"results": year_by_day})
+                        content.update({"table": 'day'})
+                        result = utils.calc_year_by_day(data, latitude, tilt_angle, azimuth)
                         if 'check_max_titl' in form:
                             max_titl = utils.max_tilt_angle(utils.calc_year_by_day, data,
                                                             latitude=latitude, azimuth=azimuth)
                             content.update({"name_file": name_file, "max_titl": max_titl})
 
                     elif form['select_year'] == 'sy3':
-                        year_by_month = utils.calc_year_by_month(data, latitude, tilt_angle, azimuth)
-                        content.update({"results": year_by_month})
+                        content.update({"table": 'month'})
+                        result = utils.calc_year_by_month(data, latitude, tilt_angle, azimuth)
                         if 'check_graph_year' in form:
-                            graph_data = [[i + 1, year_by_month[i]] for i in range(len(year_by_month))]
-                            content = {'graph': True,
+                            graph_data = [[i + 1, result[i]] for i in range(len(result))]
+                            content.update({'graph': True,
                                        'data': graph_data,
                                        'title': f'Полученная энергия на наклонной поверхности за год',
-                                       'xAxis': "Месяц"}
+                                       'xAxis': "Месяц"})
                         if 'check_max_titl' in form:
                             max_titl = utils.max_tilt_angle(utils.calc_year_by_month, data,
                                                             latitude=latitude, azimuth=azimuth)
@@ -120,29 +120,71 @@ def calc(request, name_file):
 
                 elif form['type_date'] == 'custom':
                     if form['select_custom'] == 'sc1':
+                        content.update({"table": 'hour'})
                         nmon1 = int(form['nmon_cus1'])
                         nday1 = int(form['nday_cus1'])
                         nmon2 = int(form['nmon_cus2'])
                         nday2 = int(form['nday_cus2'])
-                        calc_by_range = utils.calc_by_range(data, nmon1, nday1, nmon2, nday2, latitude, tilt_angle, azimuth)
-                        content.update({"results": calc_by_range, "nmon1": nmon1, "nday1": nday1,
+                        result = utils.calc_by_range(data, nmon1, nday1, nmon2, nday2, latitude, tilt_angle, azimuth)
+                        content.update({"nmon1": nmon1, "nday1": nday1,
                                         "nmon2": nmon2, "nday2": nday2 })
                         if 'check_max_titl' in form:
                             max_titl = utils.max_tilt_angle(utils.calc_by_range, data, nmon1, nday1, nmon2, nday2,
                                                             latitude=latitude, azimuth=azimuth)
                             content.update({"name_file": name_file, "max_titl": max_titl})
 
-        content.update({"name_file": name_file})
+                request.session['result'] = pd.Series(result).to_json(orient='values')
+                table, columns = data_table(request, content)
+                content.update({"table": table, "columns": columns})
+
         return render(request, 'main/calc.html', content)
-    except (TypeError, AttributeError):
+    except (IndexError, ValueError):
+        # TypeError, AttributeError
         return redirect(reverse('file_false', kwargs={'status_file': name_file+'_false'}))
+
+
+def data_table(request, content):
+    name_file = content['name_file']
+    data = pd.read_csv("media/csv/" + name_file, decimal=",", delimiter=';')
+    if ('nmon' in content) and ('nday' in content) :
+        print("fefwef")
+        data = data.loc[(data["Month"] == int(content['nmon'])) &
+                        (data["Day"] == int(content['nday']))]
+    elif 'nmon' in content:
+        data = data.loc[(data["Month"] == int(content['nmon']))]
+    elif 'nmon1' in content:
+        data = data[(data.Month >= int(content['nmon1'])) & (data.Month <= int(content['nmon2']))]
+        data = data.drop(data[(data.Month == int(content['nmon1'])) &
+                              (data.Day < int(content['nday1']))].index)
+        data = data.drop(data[(data.Month == int(content['nmon2'])) &
+                              (data.Day > int(content['nday2']))].index)
+
+    result = [float(s) for s in list(filter(None, request.session.get('result')[1: -1].split(',')))]
+    if content["table"] == 'hour':
+        month = list(data.Month)
+        day = list(data.Day)
+        hour = list(data.Hour)
+        return [[month[i], day[i], hour[i], result[i]] for i in range(len(result))], 4
+    if content["table"] == 'day':
+        if len(result) <= 31:
+            month = list(data.Month)
+            day = list(set(data.Day))
+            return [[month[i], day[i], result[i]] for i in range(len(result))], 3
+        else:
+            data = data.drop(data[data.Hour != 1].index)
+            month = list(data.Month)
+            day = list(data.Day)
+            return [[month[i], day[i], result[i]] for i in range(len(result))], 3
+    if content["table"] == 'month':
+        month = list(set(data.Month))
+        return [[month[i], result[i]] for i in range(len(result))], 2
+
 
 
 def download_csv(request):
     name_file = 'test.csv'
     if request.method == 'GET':
         name_file = request.GET.get('name_file')
-        results = request.GET.get('results')
         data = pd.read_csv("media/csv/" + name_file, decimal=",", delimiter=';')
         data = data.drop(data.columns[[0]], axis=1)
         if request.GET.get('nmon') != '' and request.GET.get('nday') != '':
@@ -151,12 +193,12 @@ def download_csv(request):
         elif request.GET.get('nmon') != '':
             data = data.loc[(data["Month"] == int(request.GET.get('nmon')))]
         elif request.GET.get('nmon1') != '':
-            data = data.loc[(data["Month"] >= int(request.GET.get('nmon1'))) &
-                            (data["Day"] >= int(request.GET.get('nday1'))) &
-                            (data["Month"] <= int(request.GET.get('nmon2'))) &
-                            (data["Day"] <= int(request.GET.get('nday2')))]
-        # sLength = len(data.columns[[0]])
-        data['GOI'] = [float(s) for s in list(filter(None, request.GET.get('results')[1: -1].split(' ')))]
+            data = data[(data.Month >= int(request.GET.get('nmon1'))) & (data.Month <= int(request.GET.get('nmon2')))]
+            data = data.drop(data[(data.Month == int(request.GET.get('nmon1'))) &
+                                  (data.Day < int(request.GET.get('nday1')))].index)
+            data = data.drop(data[(data.Month == int(request.GET.get('nmon2'))) &
+                                  (data.Day > int(request.GET.get('nday2')))].index)
+        data['GOI'] = [float(s) for s in list(filter(None, request.session.get('result')[1: -1].split(',')))]
         data.to_csv("media/export_csv/new_" + name_file, sep=';')
     # Define Django project base directory
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
