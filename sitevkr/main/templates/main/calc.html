@@ -7,9 +7,12 @@
 <div class="dropdown">
   <button class="dropbtn">Экспорт CSV</button>
   <div class="dropdown-content">
+      {% if csv == True%}
       <a href="/download_csv/?name_file={{name_file}}&nmon={{nmon}}&nday={{nday}}&
        &nmon1={{nmon1}}&nday1={{nday1}}&nmon2={{nmon2}}&nday2={{nday2}}" >Стандартный CSV</a>
-
+      {% else%}
+       <a>CSV файл не доступен для скачивания</a>
+      {% endif %}
 
   </div>
 </div>

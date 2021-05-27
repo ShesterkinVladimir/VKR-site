@@ -33,7 +33,7 @@ def upload_file(request, status_file=""):  # загрузка файла по н
 def calc(request, name_file):
     try:
         data = pd.read_csv("media/csv/"+name_file, decimal=",", delimiter=';')
-        content = {'graph': False, "name_file": name_file}
+        content = {'graph': False, "name_file": name_file, 'csv': False}
         result = []
         if request.method == 'POST':
             form = request.POST
@@ -43,7 +43,8 @@ def calc(request, name_file):
                 azimuth = int(form['azimuth'])
                 content.update({'latitude': latitude,
                                 'tilt_angle': tilt_angle,
-                                'azimuth': azimuth})
+                                'azimuth': azimuth,
+                                'csv': True})
                 if form['type_date'] == 'day':
                     nmon = int(form['nmon_day'])
                     nday = int(form['nday_day'])
@@ -136,7 +137,6 @@ def calc(request, name_file):
                 request.session['result'] = pd.Series(result).to_json(orient='values')
                 table, columns = data_table(request, content)
                 content.update({"table": table, "columns": columns})
-
         return render(request, 'main/calc.html', content)
     except (IndexError, ValueError):
         # TypeError, AttributeError

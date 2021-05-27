@@ -79,7 +79,7 @@ def fun_calc_new(num_day_y, e_sum, e_dif, ro, latitude, tilt_angle, azimuth):  #
     r_otr = 0.5 * ro * e_sum * sin(radians(tilt_angle))
 
     r = r_pr + r_d + r_otr
-    print(r)
+
     return r
 
 
