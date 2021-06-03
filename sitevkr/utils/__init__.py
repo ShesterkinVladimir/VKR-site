@@ -1,7 +1,5 @@
 from numpy import array, sin, cos, tan, radians, degrees, sqrt, pi, arccos, arctan, fmax, fmin, \
     sum, concatenate, arange, asfarray
-# import pandas as pd
-# import matplotlib.pyplot as plt
 
 
 def fun_calc_new(num_day_y, e_sum, e_dif, ro, latitude, tilt_angle, azimuth):  # основная функция расчета

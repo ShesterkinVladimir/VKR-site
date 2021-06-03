@@ -138,7 +138,7 @@ def calc(request, name_file):
                 table, columns = data_table(request, content)
                 content.update({"table": table, "columns": columns})
         return render(request, 'main/calc.html', content)
-    except (IndexError, ValueError):
+    except (IndexError, ValueError, KeyErro):
         # TypeError, AttributeError
         return redirect(reverse('file_false', kwargs={'status_file': name_file+'_false'}))
 
@@ -147,7 +147,6 @@ def data_table(request, content):
     name_file = content['name_file']
     data = pd.read_csv("media/csv/" + name_file, decimal=",", delimiter=';')
     if ('nmon' in content) and ('nday' in content) :
-        print("fefwef")
         data = data.loc[(data["Month"] == int(content['nmon'])) &
                         (data["Day"] == int(content['nday']))]
     elif 'nmon' in content:

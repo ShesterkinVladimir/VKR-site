@@ -230,8 +230,6 @@ var chart = Highcharts.chart('container', {
     }
   }],
   exporting: {
-     //showTable: true
-    //    enabled: false
 
        csv: {
       itemDelimiter: ';'
@@ -242,7 +240,9 @@ var chart = Highcharts.chart('container', {
                     symbolStroke: "#e85f4c", //#1bbc9b
                     theme: {
             fill:"#f2fbfb"
-        }
+        },
+        menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG",
+        "downloadJPEG", "downloadPDF", "downloadSVG"]
                 }
             },
     },
