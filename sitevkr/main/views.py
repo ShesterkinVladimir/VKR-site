@@ -8,8 +8,9 @@ import mimetypes
 from django.http.response import HttpResponse
 import os
 
+# Импорт CSV файла
 
-def upload_file(request, status_file=""):  # загрузка файла по нажатию кнопки
+def upload_file(request, status_file=""):
     if request.method == 'POST':
         form = Upload_Form(request.POST, request.FILES)
         if form.is_valid():
@@ -29,6 +30,7 @@ def upload_file(request, status_file=""):  # загрузка файла по н
 
     return render(request, 'main/addbutton.html', context)
 
+# Функция выбора параметров расчёта
 
 def calc(request, name_file):
     try:
@@ -139,9 +141,9 @@ def calc(request, name_file):
                 content.update({"table": table, "columns": columns})
         return render(request, 'main/calc.html', content)
     except (IndexError, ValueError, KeyErro):
-        # TypeError, AttributeError
         return redirect(reverse('file_false', kwargs={'status_file': name_file+'_false'}))
 
+# Формирование данных для таблицы
 
 def data_table(request, content):
     name_file = content['name_file']
@@ -179,6 +181,7 @@ def data_table(request, content):
         return [[month[i], result[i]] for i in range(len(result))], 2
 
 
+# Экспорт CSV файла
 
 def download_csv(request):
     name_file = 'test.csv'

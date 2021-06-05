@@ -92,31 +92,5 @@ $(function () {
     });
 });
 
-//  $("#select_custom").prop("disabled", "disabled");
-
-//function inputMonth() {
-//    this.value = this.value.replace(',', '.');
-//    if (!/^\.?$/.test(this.value) && !isFinite(this.value)) {
-//        this.value = parseFloat(this.value) || this.value.slice(0, -1);
-//    }
-//  this.value > 12 && (this.value = '');
-//}
-//
-//function inputDay() {
-//    this.value = this.value.replace(',', '.');
-//    if (!/^\.?$/.test(this.value) && !isFinite(this.value)) {
-//        this.value = parseFloat(this.value) || this.value.slice(0, -1);
-//    }
-//  this.value > 31 && (this.value = '');
-//}
-//
-//nmon_day.oninput = nmon_day.onkeydown = inputMonth;
-//nday_day.oninput = nday_day.onkeydown = inputDay;
-//nmon_mon.oninput = nmon_mon.onkeydown = inputMonth;
-//nmon_cus1.oninput = nmon_cus1.onkeydown = inputMonth;
-//nday_cus1.oninput = nday_cus1.onkeydown = inputDay;
-//nmon_cus2.oninput = nmon_cus2.onkeydown = inputMonth;
-//nday_cus2.oninput = nday_cus2.onkeydown = inputDay;
-//
 
 
